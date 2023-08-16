@@ -25,8 +25,9 @@
 #include "../components/esp-idf-lib-master/components/encoder/encoder.h"
 #include "../components/javi/init.h"
 #include "../components/esp-idf-lib-master/components/dht/dht.h"
-#include "../components/javi/pantallas.c"
 #include "../components/javi/sntp_time.h"
+#include "../components/javi/pantallas.c"
+#include "../components/javi/led.c"
 #include "../components/javi/wifi_con.c"
 #include "../components/javi/mqtt_funcs.c"
 #include "../components/temp/temp.h"
@@ -40,10 +41,13 @@ void app_main(void)
 	ESP_ERROR_CHECK(nvs_flash_init());
 	ESP_ERROR_CHECK(esp_netif_init());
 
+	_queue = xQueueCreate(QUEUE_LENGTH, sizeof(rotary_encoder_event_t));
+
 	config_dis ();
 	pant_bienv ();
-	_queue = xQueueCreate(QUEUE_LENGTH, sizeof(rotary_encoder_event_t));
+	config_led();
 	pant_inicio ();
+	
 	wifi_init_sta();
     if(net_con)
 		mqtt_app_start();
@@ -53,6 +57,6 @@ void app_main(void)
 	
 	btn_enc=false;
 	ssd1306_clear_screen(&devd, false);
-	xTaskCreate(get_temp, "get_temp", 4096 * 8, NULL, 5, NULL);
-
+	xTaskCreate(get_temp, "get_temp", 4096 * 8, NULL, 3, NULL);
+	xTaskCreate(read_enc, "read_enc", 4096, NULL, 4, NULL);
 }

@@ -9,6 +9,7 @@
 #define VER_RES	64 // Resolución vertical
 #define DELAY_BIENV 5000 // Delay de pantalla de bienvenida
 #define DELAY_CON 5000 // Delay de pantalla de conexión
+int	CONTRAST = 15; // Contraste del display
 
 SSD1306_t devd;
 
@@ -18,8 +19,8 @@ void pant_inicio (void);
 void pant_nocon(void);
 void pant_main (void);
 void pant_no_sensor(void);
-void menu0 (void *pvParameter);
-void menu1 (void);
+void menu1 (void); // Menú de opciones
+void menu2 (void); // Menú de elección de modo manual o automático
 
 void config_dis (void)
 {
@@ -58,7 +59,6 @@ void pant_inicio ()
 }
 void pant_conok ()
 {
-	ssd1306_clear_screen(&devd, false);
 	ssd1306_display_text(&devd, 0, "IP address:", 11, false);
 	ssd1306_display_text(&devd, 1, ip, strlen(ip), false);
 	ssd1306_display_text(&devd, 2, "MAC address:", 12, false);
@@ -67,16 +67,10 @@ void pant_conok ()
 	ssd1306_display_text(&devd, 5, gw, strlen(gw), false);
 	ssd1306_display_text_with_value(&devd, 6, "Pot senal: ", 11, RSSI_CHAR, strlen(RSSI_CHAR), false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
-	if(btn_enc){
-		btn_enc=false;
-		xTaskCreate(menu0, "menu0", 4096, NULL, 5, NULL);
-	}
 }
 
 void pant_nocon(void)
 {
-	ssd1306_clear_screen(&devd, false);
-	vTaskDelay(100 / portTICK_PERIOD_MS);
 	ssd1306_display_text(&devd, 0, "IP address:", 11, false);
 	ssd1306_display_text(&devd, 1, "---.---.---.---", 15, false);
 	ssd1306_display_text(&devd, 2, "MAC address:", 12, false);
@@ -85,15 +79,10 @@ void pant_nocon(void)
 	ssd1306_display_text(&devd, 5, "---.---.---.---", 15, false);
 	ssd1306_display_text(&devd, 6, "Pot senal: XX", 11, false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
-	if(btn_enc){
-		btn_enc=false;
-		xTaskCreate(menu0, "menu0", 4096, NULL, 5, NULL);
-	}
 }
 
 void pant_main(void)
 {
-	char sp_char[5];
 	ssd1306_display_text(&devd, 0, pant_time, strlen(pant_time), true);
     ssd1306_display_text_with_value(&devd, 1, "Temperatura: ", 13, temp_char, strlen(temp_char), false);
     ssd1306_display_text_with_value(&devd, 2, "Humedad %: ", 11, hum_char, strlen(hum_char), false);
@@ -104,29 +93,16 @@ void pant_main(void)
 		ssd1306_display_text(&devd, 3, "Salida: ON", 10, false);
 	}
 	sprintf(sp_char,"%d", set_point);
-	ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 2, false);
-	if (net_con){
-		ssd1306_display_text(&devd, 5, "Red: OK   ", 10, false);
-		// Encender el LED en color verde
-		
-	}
-	else if (!net_con) {
-		ssd1306_display_text(&devd, 5, "Red: ERROR", 10, false);
-		// Encender el LED en color rojo
-		
-	}
-	if (mqtt_state){
+	ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 3, false);
+	if(modo==0)
+	ssd1306_display_text(&devd, 5, "Modo: Manual", 16, false);
+	else
+	ssd1306_display_text(&devd, 5, "Modo: Automatico", 16, false);
+	if (mqtt_state)
 		ssd1306_display_text(&devd, 6, "Server: ONLINE ", 15, false);
-	}
-	else if (!mqtt_state) {
+	else if (!mqtt_state)
 		ssd1306_display_text(&devd, 6, "Server: OFFLINE", 15, false);
-	}
 	ssd1306_display_text(&devd, 7, "Menu", 4, true);
-	if (btn_enc){
-		level=1;
-		btn_enc=false;
-		xTaskCreate(menu0, "menu0", 4096, NULL, 5, NULL);
-	}
 }
 
 void pant_no_sensor(void)
@@ -138,74 +114,152 @@ void pant_no_sensor(void)
 	ssd1306_clear_screen(&devd, false);
 }
 
-void menu0 (void *pvParameter)
-{
-	ssd1306_clear_screen(&devd, false);
-	btn_enc=false;
-	level=1;
-	while(1){
-	if (inc_enc){
-		level++;
-		if (level>4){
-			level=1;
-		}
-	inc_enc=false;
-	}
-	if (dec_enc){
-		level--;
-		if (level<1){
-			level=4;
-		}
-	dec_enc=false;
-	}
-	if(level==1){
-		ssd1306_display_text(&devd, 0, "Estado", 6, true);
-		ssd1306_display_text(&devd, 1, "Actualizar hora", 15, false);
-		ssd1306_display_text(&devd, 2, "Modo", 4, false);
-		ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);
-		if(btn_enc){
-			menu1();
-			vTaskDelete(NULL);
-		}
-	}
-	if(level==2){
-		ssd1306_display_text(&devd, 0, "Estado", 6, false);
-		ssd1306_display_text(&devd, 1, "Actualizar hora", 15, true);
-		ssd1306_display_text(&devd, 2, "Modo", 4, false);
-		ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);
-	}
-	if(level==3){
-		ssd1306_display_text(&devd, 0, "Estado", 6, false);
-		ssd1306_display_text(&devd, 1, "Actualizar hora", 15, false);
-		ssd1306_display_text(&devd, 2, "Modo", 4, true);
-		ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);
-	}
-	if(level==4){
-		ssd1306_display_text(&devd, 0, "Estado", 6, false);
-		ssd1306_display_text(&devd, 1, "Actualizar hora", 15, false);
-		ssd1306_display_text(&devd, 2, "Modo", 4, false);
-		ssd1306_display_text(&devd, 3, "Pant. principal", 15, true);
-		if (btn_enc){
-			btn_enc=false;
-			level=0;
-			vTaskDelete(NULL);
-			pant_main();
-			
-		}
-	}}
-	ssd1306_clear_screen(&devd, false);
-	vTaskDelete(NULL);
-}
-
 void menu1 (void)
 {
 	ssd1306_clear_screen(&devd, false);
-	if (net_con){
-		btn_enc=false;
-		pant_conok();
+	btn_enc=false;
+	pos_menu=1;
+	while(level==1){
+		if(level>0 && inc_enc){
+			pos_menu++;
+			inc_enc=false;
+		}	
+		if (level>0 && dec_enc){
+			pos_menu--;
+			dec_enc=false;
+		}
+		if (pos_menu>4){
+			pos_menu=1;
+			}
+		if (pos_menu<1){
+			pos_menu=4;
+			}
+		if(pos_menu==1){
+			ssd1306_display_text(&devd, 0, "Estado", 6, true);
+			ssd1306_display_text(&devd, 1, "Modo", 4, false);
+			ssd1306_display_text(&devd, 2, "Actualizar hora", 15, false);
+			ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);
+			if(btn_enc){
+				btn_enc=false;
+				ssd1306_clear_screen(&devd, false);
+				while(!btn_enc){
+				if (net_con)
+					pant_conok();
+				
+				if (!net_con)
+					pant_nocon();
+				}
+				if(btn_enc){
+				btn_enc=false;
+				level=1;
+				menu1();
+				}
+			}
+		}
+		if(pos_menu==2){
+			ssd1306_display_text(&devd, 0, "Estado", 6, false);
+			ssd1306_display_text(&devd, 1, "Modo", 4, true);
+			ssd1306_display_text(&devd, 2, "Actualizar hora", 15, false);
+			ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);	
+			if(btn_enc){
+				btn_enc=false;
+				level=2;
+				menu2();
+			}
+		}
+		if(pos_menu==3){
+			ssd1306_display_text(&devd, 0, "Estado", 6, false);
+			ssd1306_display_text(&devd, 1, "Modo", 4, false);
+			ssd1306_display_text(&devd, 2, "Actualizar hora", 15, true);
+			ssd1306_display_text(&devd, 3, "Pant. principal", 15, false);
+			if(btn_enc){
+				btn_enc=false;
+				ssd1306_display_text(&devd, 5, "Obteniendo la", 13, false);
+    			ssd1306_display_text(&devd, 6, "hora...", 7, false);
+				obtain_time();
+				ssd1306_display_text(&devd, 6, "hora... OK", 10, false);
+				vTaskDelay(pdMS_TO_TICKS(1000));
+				ssd1306_display_text(&devd, 5, "               ", 15, false);
+				ssd1306_display_text(&devd, 6, "               ", 15, false);
+			}
+		}
+		if(pos_menu==4){
+			ssd1306_display_text(&devd, 0, "Estado", 6, false);
+			ssd1306_display_text(&devd, 1, "Modo", 4, false);
+			ssd1306_display_text(&devd, 2, "Actualizar hora", 15, false);
+			ssd1306_display_text(&devd, 3, "Pant. principal", 15, true);
+			if (btn_enc){
+				btn_enc=false;
+				level=0;
+				ssd1306_clear_screen(&devd, false);
+				pant_main();	
+			}
+		}
 	}
-	if (!net_con){
-		btn_enc=false;
-		pant_nocon();
+	ssd1306_clear_screen(&devd, false);
+}
+
+void menu2 (void)
+{
+	ssd1306_clear_screen(&devd, false);
+	pos_menu=1;
+	while(level==2){
+		if(level>0 && inc_enc){
+			pos_menu++;
+			inc_enc=false;
+		}	
+		if (level>0 && dec_enc){
+			pos_menu--;
+			dec_enc=false;
+		}
+		if (pos_menu>3){
+			pos_menu=1;
+			}
+		if (pos_menu<1){
+			pos_menu=3;
+			}
+		ssd1306_display_text(&devd, 4, "Modo actual:    ", 16, false);
+		if(modo==0)
+			ssd1306_display_text(&devd, 5, "Manual          ", 16, true);
+		if(modo==1)
+			ssd1306_display_text(&devd, 5, "Automatico      ", 16, true);
+		if(pos_menu==1){
+			ssd1306_display_text(&devd, 0, "Manual", 6, true);
+			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
+			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
+			if(btn_enc){
+				btn_enc=false;
+				modo=0;
+				ssd1306_display_text(&devd, 6, "Selecciono modo", 15, false);
+				ssd1306_display_text(&devd, 7, "Manual", 6, true);
+				vTaskDelay(pdMS_TO_TICKS(1500));
+				ssd1306_display_text(&devd, 6, "                ", 16, false);
+				ssd1306_display_text(&devd, 7, "                ", 16, false);
+			}
+		}
+		if(pos_menu==2){
+			ssd1306_display_text(&devd, 0, "Manual", 6, false);
+			ssd1306_display_text(&devd, 1, "Automatico", 10, true);
+			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
+			if(btn_enc){
+				btn_enc=false;
+				modo=1;
+				ssd1306_display_text(&devd, 6, "Selecciono modo", 15, false);
+				ssd1306_display_text(&devd, 7, "Automatico", 10, true);
+				vTaskDelay(pdMS_TO_TICKS(1500));
+				ssd1306_display_text(&devd, 6, "                ", 16, false);
+				ssd1306_display_text(&devd, 7, "                ", 16, false);
+			}
+		}
+		if(pos_menu==3){
+			ssd1306_display_text(&devd, 0, "Manual", 6, false);
+			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
+			ssd1306_display_text(&devd, 2, "Menu anterior", 13, true);
+			if(btn_enc){
+				btn_enc=false;
+				level=1;
+				menu1();
+			}
+		}
 	}
 }

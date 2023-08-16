@@ -20,6 +20,7 @@ extern bool time_sinc_ok;
 /* char formatted_time[20]; */
 
 #ifdef CONFIG_SNTP_TIME_SYNC_METHOD_CUSTOM
+
 void sntp_sync_time(struct timeval *tv)
 {
    settimeofday(tv, NULL);

@@ -1,6 +1,3 @@
-#define LED_R_PIN 0 // Pin GPIO para el LED rojo
-#define LED_G_PIN 2 // Pin GPIO para el LED verde
-#define LED_B_PIN 4 // Pin GPIO para el LED azul
 
 
 wifi_ap_record_t ap_info;

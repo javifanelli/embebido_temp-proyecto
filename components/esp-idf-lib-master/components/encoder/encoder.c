@@ -146,10 +146,12 @@ inline static void read_encoder(rotary_encoder_t *re)
         if (inc > 0)
         {
             ESP_LOGI(TAG, "Encoder giró en sentido horario");
+            inc_enc=true;
         }
         else
         {
             ESP_LOGI(TAG, "Encoder giró en sentido antihorario");
+            dec_enc=true;
         }
     }
 }

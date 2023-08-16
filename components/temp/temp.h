@@ -16,8 +16,7 @@ void get_temp(void *pvParameter)
             ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity / 10, temperature / 10);
             if (!time_sinc_ok)
                 {
-                vTaskDelay(100);
-                obtain_time();
+                    obtain_time();
                 }
             time_t now = time(NULL);
             timeinfo = localtime(&now);
@@ -36,14 +35,12 @@ void get_temp(void *pvParameter)
             cont_mqtt++;
             if(level==0)
                 pant_main();
-            xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000*refresh));
-            /* vTaskDelay(1000*refresh / portTICK_PERIOD_MS); */
+            vTaskDelay(pdMS_TO_TICKS(1000*refresh));
+            
         } else {
             if (cont_temp > 5){
                 ESP_LOGE(TAG,"Could not read data from sensor\n");
 			    pant_no_sensor();
-                xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
-                /* vTaskDelay(100 / portTICK_PERIOD_MS); */
                 }
             cont_temp++;
             xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
