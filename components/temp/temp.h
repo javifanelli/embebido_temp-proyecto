@@ -13,7 +13,7 @@ void get_temp(void *pvParameter)
 {
     while(1) {
         if (dht_read_data(sensor_type, dht_gpio, &humidity, &temperature) == ESP_OK) {
-            ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity / 10, temperature / 10);
+            ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity/10, temperature/10);
             if (!time_sinc_ok)
                 {
                     obtain_time();
@@ -23,6 +23,8 @@ void get_temp(void *pvParameter)
             strftime(pant_time, sizeof(pant_time), "%H:%M %d-%m-%Y", timeinfo);
             sprintf(hum_char, "%d", humidity/10);
 			sprintf(temp_char, "%d", temperature/10);
+            if(level==0)
+                pant_main();
             esp_wifi_sta_get_ap_info(&ap_info);
             net_con = (ap_info.authmode != WIFI_AUTH_OPEN);
             if(cont_mqtt==60)
@@ -33,8 +35,14 @@ void get_temp(void *pvParameter)
                 mqtt_send_info();
                 }
             cont_mqtt++;
-            if(level==0)
-                pant_main();
+            if(modo==1 && ((temperature/10)<=(set_point-hist))){
+                out_temp=true;
+                gpio_set_level(CONTROL, 1);
+            }
+            if(modo==1 && ((temperature/10)>=(set_point+hist))){
+                out_temp=false;
+                gpio_set_level(CONTROL, 0);
+            }
             vTaskDelay(pdMS_TO_TICKS(1000*refresh));
             
         } else {

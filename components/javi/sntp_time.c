@@ -13,6 +13,7 @@
 #include "nvs_flash.h"
 #include "esp_sntp.h"
 
+
 static const char *TAG = "SNTP Module";
 
 RTC_DATA_ATTR static int boot_count = 0;

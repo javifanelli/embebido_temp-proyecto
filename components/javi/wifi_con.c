@@ -15,9 +15,6 @@ static EventGroupHandle_t s_wifi_event_group;
 #define WIFI_FAIL_BIT      BIT1
 #define TAG "Proyecto"
 
-#define LED_R GPIO_NUM_15
-#define LED_G GPIO_NUM_4
-
 static int s_retry_num = 0;
 
 void wifi_init_sta(void);

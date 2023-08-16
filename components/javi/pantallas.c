@@ -86,18 +86,19 @@ void pant_main(void)
 	ssd1306_display_text(&devd, 0, pant_time, strlen(pant_time), true);
     ssd1306_display_text_with_value(&devd, 1, "Temperatura: ", 13, temp_char, strlen(temp_char), false);
     ssd1306_display_text_with_value(&devd, 2, "Humedad %: ", 11, hum_char, strlen(hum_char), false);
-	if (out_temp == false){
+	if(out_temp == false)
 		ssd1306_display_text(&devd, 3, "Salida: OFF", 11, false);
+	if(out_temp == true)
+		ssd1306_display_text(&devd, 3, "Salida: ON ", 11, false);
+	if(modo==0){
+		sprintf(sp_char,"%d", set_point);
+		ssd1306_display_text(&devd, 5, "Modo: Manual", 16, false);
+		ssd1306_display_text(&devd, 4, "Setpoint: --", 12, false);
 	}
-	else {
-		ssd1306_display_text(&devd, 3, "Salida: ON", 10, false);
+	if(modo==1){
+		ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 3, false);
+		ssd1306_display_text(&devd, 5, "Modo: Automatico", 16, false);
 	}
-	sprintf(sp_char,"%d", set_point);
-	ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 3, false);
-	if(modo==0)
-	ssd1306_display_text(&devd, 5, "Modo: Manual", 16, false);
-	else
-	ssd1306_display_text(&devd, 5, "Modo: Automatico", 16, false);
 	if (mqtt_state)
 		ssd1306_display_text(&devd, 6, "Server: ONLINE ", 15, false);
 	else if (!mqtt_state)
@@ -196,7 +197,6 @@ void menu1 (void)
 			}
 		}
 	}
-	ssd1306_clear_screen(&devd, false);
 }
 
 void menu2 (void)
@@ -220,9 +220,9 @@ void menu2 (void)
 			}
 		ssd1306_display_text(&devd, 4, "Modo actual:    ", 16, false);
 		if(modo==0)
-			ssd1306_display_text(&devd, 5, "Manual          ", 16, true);
+			ssd1306_display_text(&devd, 5, "Manual", 6, true);
 		if(modo==1)
-			ssd1306_display_text(&devd, 5, "Automatico      ", 16, true);
+			ssd1306_display_text(&devd, 5, "Automatico", 10, true);
 		if(pos_menu==1){
 			ssd1306_display_text(&devd, 0, "Manual", 6, true);
 			ssd1306_display_text(&devd, 1, "Automatico", 10, false);

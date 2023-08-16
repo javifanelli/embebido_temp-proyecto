@@ -57,6 +57,6 @@ void app_main(void)
 	
 	btn_enc=false;
 	ssd1306_clear_screen(&devd, false);
-	xTaskCreate(get_temp, "get_temp", 4096 * 8, NULL, 3, NULL);
-	xTaskCreate(read_enc, "read_enc", 4096, NULL, 4, NULL);
+	xTaskCreate(get_temp, "get_temp", 4096*8, NULL, 3, NULL);
+	xTaskCreate(read_enc, "read_enc", 4096*2, NULL, 4, NULL);
 }

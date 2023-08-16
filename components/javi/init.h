@@ -1,5 +1,3 @@
-
-
 wifi_ap_record_t ap_info;
 struct tm *timeinfo;
 struct timeval tv;

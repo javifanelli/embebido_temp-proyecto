@@ -2,6 +2,7 @@
 #ifndef VARIABLES_H
 #define VARIABLES_H
 
+
 char hum_char[10]; // valor de humedad en char para mostrar
 char temp_char[10]; // valor de temperatura en char para mostrar
 uint8_t mac[6]; // MAC del dispositivo ESP32
@@ -20,6 +21,7 @@ bool out_temp = false; // Variable para detectar el estado de la salida del tria
 int set_point = 20; // Variable para ajustar el valor de set point de temperatura entre 18 y 28 grados Celsius
 char sp_char[10]; // Variable de set point en char
 int modo = 0; // Variable para el modo. 0=manual, 1=automático
+int hist = 1; // Histéresis para el control de temperatura
 bool btn_enc = false; // Variable para detectar el botón pulsado
 bool inc_enc = false; // Variable para detectar el giro horario del encoder
 bool dec_enc = false; // Variable para detectar el giro antihorario del encoder
