@@ -15,9 +15,7 @@ void get_temp(void *pvParameter)
         if (dht_read_data(sensor_type, dht_gpio, &humidity, &temperature) == ESP_OK) {
             ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity/10, temperature/10);
             if (!time_sinc_ok)
-                {
-                    obtain_time();
-                }
+                obtain_time();
             time_t now = time(NULL);
             /* now -= 10800; // Ajusta el tiempo restando 3 horas (10800 segundos) */
             timeinfo = localtime(&now);
