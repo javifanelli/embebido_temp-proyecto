@@ -19,6 +19,7 @@ void get_temp(void *pvParameter)
                     obtain_time();
                 }
             time_t now = time(NULL);
+            /* now -= 10800; // Ajusta el tiempo restando 3 horas (10800 segundos) */
             timeinfo = localtime(&now);
             strftime(pant_time, sizeof(pant_time), "%H:%M %d-%m-%Y", timeinfo);
             sprintf(hum_char, "%d", humidity/10);

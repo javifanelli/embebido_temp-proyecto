@@ -57,6 +57,7 @@ void pant_inicio ()
 	ssd1306_display_text(&devd, 0, "Iniciando el", 12, false);
     ssd1306_display_text(&devd, 1, "sistema", 7, false);
 }
+
 void pant_conok ()
 {
 	ssd1306_display_text(&devd, 0, "IP address:", 11, false);

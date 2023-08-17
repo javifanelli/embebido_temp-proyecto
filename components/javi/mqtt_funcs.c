@@ -13,7 +13,8 @@ extern const uint8_t server_cert_pem_end[] asm("_binary_ca_pem_end");
 char formatted_time[20]; // Fecha y hora en char para mandar por MQTT
 static const char *ID ="1";
 static char *buffer_mqtt;
-static char TOPIC[50]="/home/temperatura/data"; // Topic de MQTT
+static char TOPIC_OUT[50]="/home/temperatura/data"; // Topic de MQTT de datos de salida
+static char TOPIC_IN[50]="/home/temperatura/settings"; // Topic de MQTT de datos de entrada
 static esp_mqtt_client_handle_t client;
 
 static void log_error_if_nonzero(const char *message, int error_code)
@@ -34,7 +35,8 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     case MQTT_EVENT_CONNECTED:
         mqtt_state = true;
         ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
-        msg_id = esp_mqtt_client_subscribe(client, TOPIC, 0);
+        msg_id = esp_mqtt_client_subscribe(client, TOPIC_OUT, 0);
+        msg_id = esp_mqtt_client_subscribe(client, TOPIC_IN, 0);
         ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
         ssd1306_clear_screen(&devd, false);
         break;
@@ -100,6 +102,7 @@ static void mqtt_app_start(void)
 void mqtt_send_info(void)
 {
     char out_char[10];
+    char m_char[10];
     memset(out_char, 0, sizeof(out_char));
     cJSON *root = cJSON_CreateObject();
 
@@ -108,17 +111,18 @@ void mqtt_send_info(void)
     strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S", timeinfo);
     cJSON_AddStringToObject(root, "time", formatted_time);
     cJSON_AddStringToObject(root, "valor", temp_char);
-    if (out_temp == false) {
-        printf(out_char, "0");
-        }
-    else {
-        sprintf(out_char, "100");
-        }
-    cJSON_AddStringToObject(root, "salida", out_char);
-
+    cJSON_AddStringToObject(root, "set_point", sp_char);
+    if(modo==0)
+        cJSON_AddStringToObject(root, "modo", "Manual");
+    if(modo==1)
+        cJSON_AddStringToObject(root, "modo", "Automático");
+    if (out_temp == false)
+        cJSON_AddStringToObject(root, "salida", "0");
+    if (out_temp == true)
+        cJSON_AddStringToObject(root, "salida", "100");
+    
     char *json_string = cJSON_PrintUnformatted(root);
-    esp_mqtt_client_publish(client, TOPIC, json_string, 0, 0, 0);
-
+    esp_mqtt_client_publish(client, TOPIC_OUT, json_string, 0, 0, 0);
     free(json_string);
     cJSON_Delete(root);
 }

@@ -43,6 +43,7 @@ void obtain_time(void)
     struct tm timeinfo = { 0 };
     // Obtiene la hora actual
     time(&now);
+    /* now -= 10800; // Resta 3 horas en segundos */
     localtime_r(&now, &timeinfo);
     // Formatea la hora en el formato deseado (YYYY-MM-DD HH:MM:SS)
     strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S", &timeinfo);
