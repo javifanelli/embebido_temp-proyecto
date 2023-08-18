@@ -14,6 +14,7 @@ void get_temp(void *pvParameter)
     while(1) {
         if (dht_read_data(sensor_type, dht_gpio, &humidity, &temperature) == ESP_OK) {
             ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity/10, temperature/10);
+            
             if (!time_sinc_ok)
                 obtain_time();
             time_t now = time(NULL);
@@ -29,7 +30,7 @@ void get_temp(void *pvParameter)
             if(cont_mqtt==60)
                 {
                 if (net_con==false)
-                {esp_wifi_connect();}
+                    esp_wifi_connect();
                 cont_mqtt=0;
                 mqtt_send_info();
                 }
@@ -52,7 +53,6 @@ void get_temp(void *pvParameter)
             cont_temp++;
             xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
         }
-		
-   }
+    }
    vTaskDelete(NULL);
 }

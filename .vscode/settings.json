@@ -29,8 +29,11 @@
         "encoder.h": "c",
         "init.h": "c",
         "semphr.h": "c",
-        "variables.h": "c"
+        "variables.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
     },
     "idf.flashType": "UART",
-    "idf.port": "/dev/ttyACM1"
+    "idf.port": "/dev/ttyACM0"
 }

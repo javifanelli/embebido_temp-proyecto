@@ -2,7 +2,6 @@
 #ifndef VARIABLES_H
 #define VARIABLES_H
 
-
 char hum_char[10]; // valor de humedad en char para mostrar
 char temp_char[10]; // valor de temperatura en char para mostrar
 uint8_t mac[6]; // MAC del dispositivo ESP32

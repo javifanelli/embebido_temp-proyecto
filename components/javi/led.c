@@ -1,8 +1,6 @@
-#include "esp_wifi.h"
-#include "esp_log.h"
-
 #define LED_R GPIO_NUM_15
 #define LED_G GPIO_NUM_4
+#define LED_B GPIO_NUM_2
 #define CONTROL GPIO_NUM_13
 #define TAG "Led"
 
@@ -13,6 +11,7 @@ extern bool dec_enc;
 
 void config_led (void);
 void read_enc (void *pvParameter);
+void blink_led(void);
 
 void config_led (void)
 {
@@ -22,6 +21,8 @@ void config_led (void)
     gpio_set_direction(LED_G, GPIO_MODE_OUTPUT);
 	gpio_pad_select_gpio(CONTROL);
     gpio_set_direction(CONTROL, GPIO_MODE_OUTPUT);
+	gpio_pad_select_gpio(LED_B);
+    gpio_set_direction(LED_B, GPIO_MODE_OUTPUT);
 }
 
 void read_enc (void *pvParameter)
@@ -63,4 +64,23 @@ void read_enc (void *pvParameter)
 		xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
 	}
 	vTaskDelete(NULL);
+}
+
+void blink_led(void){
+	int i=0;
+	bool led=false;
+	while(i<4){
+		if(!led){
+			gpio_set_level(LED_B, 1);
+			led=true;
+			printf("Prendo led\n");
+		}
+		else{
+			gpio_set_level(LED_B, 0);
+			led=false;
+			printf("Apago led\n");
+		}
+		vTaskDelay(pdMS_TO_TICKS(100));
+		i+=1;
+	}
 }

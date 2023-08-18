@@ -63,6 +63,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
         printf("DATA=%.*s\r\n", event->data_len, event->data);
         buffer_mqtt = event->data;
+        blink_led();
         break;
     
     case MQTT_EVENT_ERROR:
@@ -82,9 +83,6 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
 static void mqtt_app_start(void)
 {
-    esp_wifi_get_mac(ESP_IF_WIFI_STA, mac);
-    sprintf(mac_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
     const esp_mqtt_client_config_t mqtt_cfg = {
         .uri = BROKER_URI,
         .client_cert_pem = (const char *)client_cert_pem_start,
@@ -102,11 +100,10 @@ static void mqtt_app_start(void)
 void mqtt_send_info(void)
 {
     char out_char[10];
-    char m_char[10];
     memset(out_char, 0, sizeof(out_char));
     cJSON *root = cJSON_CreateObject();
-
     cJSON_AddStringToObject(root, "ID", ID);
+    cJSON_AddStringToObject(root, "MAC", mac_str);
     cJSON_AddStringToObject(root, "tipo", tipo_disp);
     strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S", timeinfo);
     cJSON_AddStringToObject(root, "time", formatted_time);
@@ -120,7 +117,6 @@ void mqtt_send_info(void)
         cJSON_AddStringToObject(root, "salida", "0");
     if (out_temp == true)
         cJSON_AddStringToObject(root, "salida", "100");
-    
     char *json_string = cJSON_PrintUnformatted(root);
     esp_mqtt_client_publish(client, TOPIC_OUT, json_string, 0, 0, 0);
     free(json_string);
