@@ -27,13 +27,13 @@ void config_led (void)
 
 void read_enc (void *pvParameter)
 {
-    while(1){
+    while(level==0){
 		if (level==0 && btn_enc){
 			btn_enc=false;
 			level=1;
 			menu1();
 		}
-		if (modo==1 && level==0 && inc_enc){	
+		if (modo==1 && inc_enc){	
 			inc_enc=false;
 			set_point+=1;
 				if(set_point>28)
@@ -41,21 +41,21 @@ void read_enc (void *pvParameter)
 			sprintf(sp_char, "%d", set_point);
 			pant_main();
 		}	
-    	if(modo==1 && level==0 && dec_enc){
+    	if(modo==1 && dec_enc){
 			dec_enc=false;
 			set_point-=1;
 			if(set_point<18)
 				set_point=18;
 			sprintf(sp_char, "%d", set_point);
 			pant_main();
-			}
-		if(modo==0 && level==0 && dec_enc){
+		}
+		if(modo==0 && dec_enc){
 			dec_enc=false;
 			out_temp=false;
 			gpio_set_level(CONTROL, 0);
 			pant_main();
 		}
-		if(modo==0 && level==0 && inc_enc){	
+		if(modo==0 && inc_enc){	
 			inc_enc=false;
 			out_temp=true;
 			gpio_set_level(CONTROL, 1);
@@ -73,12 +73,10 @@ void blink_led(void){
 		if(!led){
 			gpio_set_level(LED_B, 1);
 			led=true;
-			printf("Prendo led\n");
 		}
 		else{
 			gpio_set_level(LED_B, 0);
 			led=false;
-			printf("Apago led\n");
 		}
 		vTaskDelay(pdMS_TO_TICKS(100));
 		i+=1;

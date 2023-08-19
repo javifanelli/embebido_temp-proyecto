@@ -38,7 +38,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         msg_id = esp_mqtt_client_subscribe(client, TOPIC_OUT, 0);
         msg_id = esp_mqtt_client_subscribe(client, TOPIC_IN, 0);
         ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-        ssd1306_clear_screen(&devd, false);
+        mqtt_state = true;
         break;
 
     case MQTT_EVENT_DISCONNECTED:
@@ -99,8 +99,8 @@ static void mqtt_app_start(void)
 
 void mqtt_send_info(void)
 {
-    char out_char[10];
-    memset(out_char, 0, sizeof(out_char));
+    /* char out_char[10];
+    memset(out_char, 0, sizeof(out_char)); */
     cJSON *root = cJSON_CreateObject();
     cJSON_AddStringToObject(root, "ID", ID);
     cJSON_AddStringToObject(root, "MAC", mac_str);

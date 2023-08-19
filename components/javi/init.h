@@ -1,5 +1,6 @@
 wifi_ap_record_t ap_info;
 struct tm *timeinfo;
+struct tm *timeinfoc;
 struct timeval tv;
 
 rotary_encoder_t control = {

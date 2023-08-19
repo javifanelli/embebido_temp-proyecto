@@ -11,6 +11,9 @@ static char ip[16]; // IP del dispositivo ESP32
 static char gw[16]; // IP del gateway de red
 
 char pant_time[20]; // Fecha y hora en char para mostrar en display
+char formatted_on_time[6];
+char formatted_off_time[6];
+
 static int8_t rssi = 0; // Potencia de la señal
 char RSSI_CHAR[10]; // Potencia de la señal en char
 bool net_con = false; // Variable global para almacenar el estado de la conexión WiFi
