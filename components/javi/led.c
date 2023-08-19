@@ -28,37 +28,25 @@ void config_led (void)
 void read_enc (void *pvParameter)
 {
     while(level==0){
-		if (level==0 && btn_enc){
+		if (btn_enc){
 			btn_enc=false;
 			level=1;
 			menu1();
 		}
-		if (modo==1 && inc_enc){	
+		if (inc_enc){	
 			inc_enc=false;
 			set_point+=1;
-				if(set_point>28)
-					set_point=28;
+				if(set_point>30)
+					set_point=30;
 			sprintf(sp_char, "%d", set_point);
 			pant_main();
 		}	
-    	if(modo==1 && dec_enc){
+    	if(dec_enc){
 			dec_enc=false;
 			set_point-=1;
-			if(set_point<18)
-				set_point=18;
+			if(set_point<15)
+				set_point=15;
 			sprintf(sp_char, "%d", set_point);
-			pant_main();
-		}
-		if(modo==0 && dec_enc){
-			dec_enc=false;
-			out_temp=false;
-			gpio_set_level(CONTROL, 0);
-			pant_main();
-		}
-		if(modo==0 && inc_enc){	
-			inc_enc=false;
-			out_temp=true;
-			gpio_set_level(CONTROL, 1);
 			pant_main();
 		}
 		xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));

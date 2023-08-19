@@ -61,7 +61,16 @@ void pant_inicio ()
 
 void pant_est()
 {
-	ssd1306_display_text(&devd, 0, "Estado OK", 9, false);
+	if(net_con)
+		ssd1306_display_text(&devd, 0, "Red: ONLINE", 11, false);
+	else if(!net_con)
+		ssd1306_display_text(&devd, 0, "Red: OFFLINE", 12, false);
+	if(mqtt_state)
+		ssd1306_display_text(&devd, 1, "Server: ONLINE ", 15, false);
+	else if(!mqtt_state)
+		ssd1306_display_text(&devd, 1, "Server: OFFLINE", 15, false);
+	ssd1306_display_text(&devd, 2, "Tiempo encendido", 16, false);
+	ssd1306_display_text(&devd, 3, pant_time, strlen(pant_time), false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
 }
 
@@ -75,6 +84,13 @@ void pant_conok ()
 	ssd1306_display_text(&devd, 5, gw, strlen(gw), true);
 	ssd1306_display_text_with_value(&devd, 6, "Pot senal: ", 11, RSSI_CHAR, strlen(RSSI_CHAR), false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
+	while(level==10){
+		if(btn_enc){
+			btn_enc=false;
+			level=1;
+			menu1();
+		}
+	}
 }
 
 void pant_nocon(void)
@@ -87,6 +103,13 @@ void pant_nocon(void)
 	ssd1306_display_text(&devd, 5, pant_time, strlen(pant_time), true);
 	ssd1306_display_text(&devd, 6, "Pot senal: XX", 11, false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
+	while(level==10){
+		if(btn_enc){
+			btn_enc=false;
+			level=1;
+			menu1();
+		}
+	}
 }
 
 void pant_main(void)

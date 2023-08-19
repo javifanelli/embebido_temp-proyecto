@@ -12,5 +12,6 @@ char formatted_time[20];
 
 void obtain_time(void);
 void initialize_sntp(void);
+void set_times(void);
 
 #endif /* SNTP_TIME_H_ */
