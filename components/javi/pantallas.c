@@ -59,6 +59,15 @@ void pant_inicio ()
     ssd1306_display_text(&devd, 1, "sistema", 7, false);
 }
 
+void pant_no_sensor(void)
+{
+	ssd1306_clear_screen(&devd, false);
+	vTaskDelay(100 / portTICK_PERIOD_MS);
+	ssd1306_display_text(&devd, 0, "No hay sensor", 13, false);
+	ssd1306_display_text(&devd, 1, "conectado", 9, false);
+	ssd1306_clear_screen(&devd, false);
+}
+
 void pant_est()
 {
 	if(net_con)
@@ -72,6 +81,16 @@ void pant_est()
 	ssd1306_display_text(&devd, 2, "Tiempo encendido", 16, false);
 	ssd1306_display_text(&devd, 3, pant_time, strlen(pant_time), false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
+	while(level==11){
+		if(btn_enc){
+			btn_enc=false;
+			level=1;
+		}
+	}
+	if(level==1){
+		ssd1306_clear_screen(&devd, false);
+		menu1();
+	}
 }
 
 void pant_conok ()
@@ -88,8 +107,11 @@ void pant_conok ()
 		if(btn_enc){
 			btn_enc=false;
 			level=1;
-			menu1();
 		}
+	}
+	if(level==1){
+		ssd1306_clear_screen(&devd, false);
+		menu1();
 	}
 }
 
@@ -101,14 +123,17 @@ void pant_nocon(void)
 	ssd1306_display_text(&devd, 3, "XXXXXXXX", 8, true);
 	ssd1306_display_text(&devd, 4, "IP gateway", 10, false);
 	ssd1306_display_text(&devd, 5, pant_time, strlen(pant_time), true);
-	ssd1306_display_text(&devd, 6, "Pot senal: XX", 11, false);
+	ssd1306_display_text(&devd, 6, "Pot senal: XXX", 14, false);
 	ssd1306_display_text(&devd, 7, "Menu anterior", 13, true);
 	while(level==10){
 		if(btn_enc){
 			btn_enc=false;
 			level=1;
-			menu1();
 		}
+	}
+	if(level==1){
+		ssd1306_clear_screen(&devd, false);
+		menu1();
 	}
 }
 
@@ -134,19 +159,8 @@ void pant_main(void)
 	ssd1306_display_text(&devd, 7, "Menu", 4, true);
 }
 
-void pant_no_sensor(void)
-{
-	ssd1306_clear_screen(&devd, false);
-	vTaskDelay(100 / portTICK_PERIOD_MS);
-	ssd1306_display_text(&devd, 0, "No hay sensor", 13, false);
-	ssd1306_display_text(&devd, 1, "conectado", 9, false);
-	ssd1306_clear_screen(&devd, false);
-}
-
 void menu1 (void)
 {
-	ssd1306_clear_screen(&devd, false);
-	btn_enc=false;
 	pos_menu=1;
 	while(level==1){
 		if(inc_enc){
@@ -162,75 +176,60 @@ void menu1 (void)
 				pos_menu=6;
 		}
 		if(pos_menu==1){
-			ssd1306_display_text(&devd, 0, "Estado", 6, true);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, false);
-			ssd1306_display_text(&devd, 2, "Modo", 4, false);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, false);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, false);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, false);
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, true);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, false);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, false);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, false);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, false);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, false);
 			if(btn_enc){
 				btn_enc=false;
 				level=10;
-				ssd1306_clear_screen(&devd, false);
-				if (net_con)
-					pant_conok();
-				if (!net_con)
-					pant_nocon();
 			}
 		}
 		if(pos_menu==2){
-			ssd1306_display_text(&devd, 0, "Estado", 6, false);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, true);
-			ssd1306_display_text(&devd, 2, "Modo", 4, false);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, false);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, false);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, false);
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, true);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, false);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, false);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, false);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, false);
 			if(btn_enc){
 				btn_enc=false;
-				ssd1306_clear_screen(&devd, false);
-				while(!btn_enc){
-					pant_est();
-					}
-				if(btn_enc){
-					btn_enc=false;
-					level=1;
-					menu1();
-				}
+				level=11;
 			}
 		}
 		if(pos_menu==3){
-			ssd1306_display_text(&devd, 0, "Estado", 6, false);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, false);
-			ssd1306_display_text(&devd, 2, "Modo", 4, true);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, false);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, false);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, false);	
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, false);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, true);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, false);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, false);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, false);	
 			if(btn_enc){
 				btn_enc=false;
 				level=2;
-				menu2();
 			}
 		}
 		if(pos_menu==4){
-			ssd1306_display_text(&devd, 0, "Estado", 6, false);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, false);
-			ssd1306_display_text(&devd, 2, "Modo", 4, false);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, true);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, false);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, false);	
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, false);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, false);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, true);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, false);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, false);	
 			if(btn_enc){
 				btn_enc=false;
 				level=3;
-				menu3();
 			}
 		}
 		if(pos_menu==5){
-			ssd1306_display_text(&devd, 0, "Estado", 6, false);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, false);
-			ssd1306_display_text(&devd, 2, "Modo", 4, false);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, false);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, true);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, false);
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, false);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, false);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, false);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, true);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, false);
 			if(btn_enc){
 				btn_enc=false;
 				ssd1306_display_text(&devd, 6, "Obteniendo la", 13, false);
@@ -243,48 +242,67 @@ void menu1 (void)
 			}
 		}
 		if(pos_menu==6){
-			ssd1306_display_text(&devd, 0, "Estado", 6, false);
-			ssd1306_display_text(&devd, 1, "Info conexion", 13, false);
-			ssd1306_display_text(&devd, 2, "Modo", 4, false);
-			ssd1306_display_text(&devd, 3, "Conf modo auto", 14, false);
-			ssd1306_display_text(&devd, 4, "Actualizar hora", 15, false);
-			ssd1306_display_text(&devd, 5, "Pant. principal", 15, true);
+			ssd1306_display_text(&devd, 0, "Estado          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Info conexion   ", 16, false);
+			ssd1306_display_text(&devd, 2, "Modo            ", 16, false);
+			ssd1306_display_text(&devd, 3, "Conf modo auto  ", 16, false);
+			ssd1306_display_text(&devd, 4, "Actualizar hora ", 16, false);
+			ssd1306_display_text(&devd, 5, "Pant. principal ", 16, true);
 			if (btn_enc){
 				btn_enc=false;
-				level=0;
-				ssd1306_clear_screen(&devd, false);
-				pant_main();	
+				level=0;	
 			}
 		}
 	}
+	if(level==10){
+		ssd1306_clear_screen(&devd, false);
+			if (net_con)
+				pant_conok();
+			if (!net_con)
+				pant_nocon();
+	}
+	if(level==11){
+		ssd1306_clear_screen(&devd, false);
+		pant_est();
+	}
+	if(level==2){
+		ssd1306_clear_screen(&devd, false);
+		menu2();
+	}
+	if(level==3){
+		ssd1306_clear_screen(&devd, false);
+		menu3();
+	}
+	if(level==0){
+		ssd1306_clear_screen(&devd, false);
+		pant_main();
+	}
+
 }
 
 void menu2 (void)
 {
-	ssd1306_clear_screen(&devd, false);
 	pos_menu=1;
 	while(level==2){
-		if(level>0 && inc_enc){
+		if(inc_enc){
 			pos_menu++;
 			inc_enc=false;
+			if (pos_menu>3)
+				pos_menu=1;
 		}	
-		if (level>0 && dec_enc){
+		if (dec_enc){
 			pos_menu--;
 			dec_enc=false;
+			if (pos_menu<1)
+				pos_menu=3;
 		}
-		if (pos_menu>3){
-			pos_menu=1;
-			}
-		if (pos_menu<1){
-			pos_menu=3;
-			}
 		ssd1306_display_text(&devd, 4, "Modo actual:    ", 16, false);
 		if(modo==0)
 			ssd1306_display_text(&devd, 5, "Manual", 6, true);
 		if(modo==1)
 			ssd1306_display_text(&devd, 5, "Automatico", 10, true);
 		if(pos_menu==1){
-			ssd1306_display_text(&devd, 0, "Manual", 6, true);
+			ssd1306_display_text(&devd, 0, "Manual          ", 16, true);
 			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
 			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
 			if(btn_enc){
@@ -299,7 +317,7 @@ void menu2 (void)
 		}
 		if(pos_menu==2){
 			ssd1306_display_text(&devd, 0, "Manual", 6, false);
-			ssd1306_display_text(&devd, 1, "Automatico", 10, true);
+			ssd1306_display_text(&devd, 1, "Automatico      ", 16, true);
 			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
 			if(btn_enc){
 				btn_enc=false;
@@ -314,23 +332,25 @@ void menu2 (void)
 		if(pos_menu==3){
 			ssd1306_display_text(&devd, 0, "Manual", 6, false);
 			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
-			ssd1306_display_text(&devd, 2, "Menu anterior", 13, true);
+			ssd1306_display_text(&devd, 2, "Menu anterior   ", 16, true);
 			if(btn_enc){
 				btn_enc=false;
 				level=1;
-				menu1();
 			}
 		}
+	}
+	if(level==1){
+		ssd1306_clear_screen(&devd, false);
+		menu1();
 	}
 }
 
 void menu3(void)
 {
-	ssd1306_clear_screen(&devd, false);
 	ssd1306_display_text(&devd, 0, "Hora encendido", 14, false);
-	ssd1306_display_text(&devd, 1, formatted_on_time, strlen(formatted_on_time), false);
+	ssd1306_display_text(&devd, 1, pant_on_time, strlen(pant_on_time), false);
 	ssd1306_display_text(&devd, 2, "Hora apagado", 12, false);
-	ssd1306_display_text(&devd, 3, formatted_off_time, strlen(formatted_off_time), false);
+	ssd1306_display_text(&devd, 3, pant_off_time, strlen(pant_off_time), false);
 	ssd1306_display_text(&devd, 4, "Valor encendido", 15, false);
 	ssd1306_display_text(&devd, 5, sp_char, strlen(sp_char), false);
 	ssd1306_display_text(&devd, 6, "Menu anterior", 13, true);
@@ -338,7 +358,10 @@ void menu3(void)
 		if(btn_enc){
 			btn_enc=false;
 			level=1;
-			menu1();
 		}
+	}
+	if(level==1){
+		ssd1306_clear_screen(&devd, false);
+		menu1();
 	}
 }

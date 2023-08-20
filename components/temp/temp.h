@@ -12,6 +12,7 @@ bool time_sinc_ok = false;
 void get_temp(void *pvParameter)
 {
     while(1) {
+        set_times();
         if (dht_read_data(sensor_type, dht_gpio, &humidity, &temperature) == ESP_OK) {
             ESP_LOGI(TAG,"Humidity: %d%% Temperature: %dC\n", humidity/10, temperature/10);
             if (!time_sinc_ok)
@@ -47,7 +48,6 @@ void get_temp(void *pvParameter)
                 gpio_set_level(CONTROL, 0);
             }
             if(modo==1){
-                set_times();
                 if(time_func && ((temperature/10)<=(set_point-hist))){
                     out_temp=true;
                     gpio_set_level(CONTROL, 1);
