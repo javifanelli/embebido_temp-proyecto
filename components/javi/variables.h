@@ -26,10 +26,10 @@ int modo = 0; // Variable para el modo. 0=manual, 1=automático
 int hist = 1; // Histéresis para el control de temperatura
 
 bool time_func=false; // Variable para analizar si debe activarse la salida
-int hon=0; // Hora de encendido
-int mon=53; // Minutos de encendido
-int hoff=0; // Hora de encendido
-int moff=57; // Minutos de encendido
+int hon=20; // Hora de encendido
+int mon=0; // Minutos de encendido
+int hoff=8; // Hora de encendido
+int moff=0; // Minutos de encendido
 
 bool btn_enc = false; // Variable para detectar el botón pulsado
 bool inc_enc = false; // Variable para detectar el giro horario del encoder

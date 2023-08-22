@@ -99,8 +99,7 @@ static void mqtt_app_start(void)
 
 void mqtt_send_info(void)
 {
-    /* char out_char[10];
-    memset(out_char, 0, sizeof(out_char)); */
+    char hon_c[4], mon_c[4], hoff_c[4], moff_c[4];
     cJSON *root = cJSON_CreateObject();
     cJSON_AddStringToObject(root, "ID", ID);
     cJSON_AddStringToObject(root, "MAC", mac_str);
@@ -117,6 +116,14 @@ void mqtt_send_info(void)
         cJSON_AddStringToObject(root, "salida", "0");
     if (out_temp == true)
         cJSON_AddStringToObject(root, "salida", "100");
+    sprintf(hon_c, "%d", hon);
+    sprintf(mon_c, "%d", mon);
+    sprintf(hoff_c, "%d", hoff);
+    sprintf(moff_c, "%d", moff);
+    cJSON_AddStringToObject(root, "hon", hon_c);
+    cJSON_AddStringToObject(root, "mon", mon_c);
+    cJSON_AddStringToObject(root, "hoff", hoff_c);
+    cJSON_AddStringToObject(root, "moff", moff_c);
     char *json_string = cJSON_PrintUnformatted(root);
     esp_mqtt_client_publish(client, TOPIC_OUT, json_string, 0, 0, 0);
     free(json_string);
