@@ -47,7 +47,6 @@ void app_main(void)
 	pant_bienv ();
 	config_led();
 	pant_inicio ();
-	
 	wifi_init_sta();
     if(net_con)
 		mqtt_app_start();
@@ -59,4 +58,5 @@ void app_main(void)
 	ssd1306_clear_screen(&devd, false);
 	xTaskCreate(get_temp, "get_temp", 4096*8, NULL, 3, NULL);
 	xTaskCreate(read_enc, "read_enc", 4096*2, NULL, 4, NULL);
+	power_on_device();
 }
