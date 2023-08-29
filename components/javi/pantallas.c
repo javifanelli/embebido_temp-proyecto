@@ -298,8 +298,8 @@ void menu2 (void)
 			ssd1306_display_text(&devd, 5, "Automatico", 10, true);
 		if(pos_menu==1){
 			ssd1306_display_text(&devd, 0, "Manual          ", 16, true);
-			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
-			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
+			ssd1306_display_text(&devd, 1, "Automatico      ", 16, false);
+			ssd1306_display_text(&devd, 2, "Menu anterior   ", 16, false);
 			if(btn_enc){
 				btn_enc=false;
 				modo=0;
@@ -311,9 +311,9 @@ void menu2 (void)
 			}
 		}
 		if(pos_menu==2){
-			ssd1306_display_text(&devd, 0, "Manual", 6, false);
+			ssd1306_display_text(&devd, 0, "Manual          ", 16, false);
 			ssd1306_display_text(&devd, 1, "Automatico      ", 16, true);
-			ssd1306_display_text(&devd, 2, "Menu anterior", 13, false);
+			ssd1306_display_text(&devd, 2, "Menu anterior   ", 16, false);
 			if(btn_enc){
 				btn_enc=false;
 				modo=1;
@@ -325,8 +325,8 @@ void menu2 (void)
 			}
 		}
 		if(pos_menu==3){
-			ssd1306_display_text(&devd, 0, "Manual", 6, false);
-			ssd1306_display_text(&devd, 1, "Automatico", 10, false);
+			ssd1306_display_text(&devd, 0, "Manual          ", 16, false);
+			ssd1306_display_text(&devd, 1, "Automatico      ", 16, false);
 			ssd1306_display_text(&devd, 2, "Menu anterior   ", 16, true);
 			if(btn_enc){
 				btn_enc=false;
