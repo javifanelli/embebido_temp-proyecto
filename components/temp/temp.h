@@ -39,14 +39,6 @@ void get_temp(void *pvParameter)
                     mqtt_send_info();
                 }
             cont_mqtt++;
-            if(modo==0 && ((temperature/10)<=(set_point-hist))){
-                out_temp=true;
-                gpio_set_level(CONTROL, 1);
-            }
-            if(modo==0 && ((temperature/10)>=(set_point+hist))){
-                out_temp=false;
-                gpio_set_level(CONTROL, 0);
-            }
             if(modo==1){
                 if(time_func && ((temperature/10)<=(set_point-hist))){
                     out_temp=true;

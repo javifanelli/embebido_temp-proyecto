@@ -148,16 +148,10 @@ void pant_main(void)
 		ssd1306_display_text(&devd, 3, "Salida: OFF", 11, false);
 	if(out_temp == true)
 		ssd1306_display_text(&devd, 3, "Salida: ON ", 11, false);
-	if(modo==0){
-		sprintf(sp_char,"%d", set_point);
-		ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 3, false);
-		ssd1306_display_text(&devd, 5, "Modo: Manual", 16, false);
-	}
-	if(modo==1){
-		sprintf(sp_char,"%d", set_point);
-		ssd1306_display_text_with_value(&devd, 4, "Setpoint: ", 10, sp_char, 3, false);
-		ssd1306_display_text(&devd, 5, "Modo: Automatico", 16, false);
-	}
+	if(modo==0)
+		ssd1306_display_text(&devd, 4, "Modo: Manual", 16, false);
+	if(modo==1)
+		ssd1306_display_text(&devd, 4, "Modo: Automatico", 16, false);
 	ssd1306_display_text(&devd, 7, "Menu", 4, true);
 }
 
@@ -352,7 +346,7 @@ void menu3(void)
 	ssd1306_display_text(&devd, 1, pant_on_time, strlen(pant_on_time), false);
 	ssd1306_display_text(&devd, 2, "Hora apagado", 12, false);
 	ssd1306_display_text(&devd, 3, pant_off_time, strlen(pant_off_time), false);
-	ssd1306_display_text(&devd, 4, "Valor encendido", 15, false);
+	ssd1306_display_text(&devd, 4, "Set point", 15, false);
 	ssd1306_display_text(&devd, 5, sp_char, strlen(sp_char), false);
 	ssd1306_display_text(&devd, 6, "Menu anterior", 13, true);
 	while(level==3){

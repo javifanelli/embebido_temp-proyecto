@@ -33,22 +33,23 @@ void read_enc (void *pvParameter)
 			level=1;
 			menu1();
 		}
-		if (inc_enc){	
-			inc_enc=false;
-			set_point+=1;
-				if(set_point>30)
-					set_point=30;
-			sprintf(sp_char, "%d", set_point);
-			pant_main();
-		}	
-    	if(dec_enc){
-			dec_enc=false;
-			set_point-=1;
-			if(set_point<15)
-				set_point=15;
-			sprintf(sp_char, "%d", set_point);
-			pant_main();
+		if(modo==0){
+			if (inc_enc){	
+				inc_enc=false;
+				out_temp=true;
+				pant_main();
+			}	
+    		if(dec_enc){
+				dec_enc=false;
+				out_temp=false;
+				pant_main();
+			}
+			if(out_temp)
+				gpio_set_level(CONTROL, 1);
+			if(!out_temp)
+				gpio_set_level(CONTROL, 0);
 		}
+		sprintf(sp_char, "%d", set_point);
 		xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
 	}
 	vTaskDelete(NULL);

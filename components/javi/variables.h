@@ -20,7 +20,7 @@ bool net_con = false; // Variable global para almacenar el estado de la conexió
 bool mqtt_state = false; // Variable para detectar el estado de conexión al servidor por MQTT
 
 bool out_temp = false; // Variable para detectar el estado de la salida del triac
-int set_point = 20; // Variable para ajustar el valor de set point de temperatura entre 18 y 28 grados Celsius
+int set_point = 20; // Variable para ajustar el valor de set point de temperatura entre 15 y 30 grados Celsius en modo manual
 char sp_char[10]; // Variable de set point en char
 int modo = 0; // Variable para el modo. 0=manual, 1=automático
 int hist = 1; // Histéresis para el control de temperatura
@@ -39,6 +39,7 @@ int level = 0; // Variable para detectar el nivel del menú
 int pos_menu = 0; // Variable para detectar la posición dentro de los menúes
 
 char tipo_disp[50]="Temperatura";
+static const char *ID ="1";
 TickType_t xLastWakeTime;
 
 #endif
