@@ -19,6 +19,7 @@ char RSSI_CHAR[10]; // Potencia de la señal en char
 bool net_con = false; // Variable global para almacenar el estado de la conexión WiFi
 bool mqtt_state = false; // Variable para detectar el estado de conexión al servidor por MQTT
 
+int16_t temperature=0; // valor de temperatura leído
 bool out_temp = false; // Variable para detectar el estado de la salida del triac
 int set_point = 20; // Variable para ajustar el valor de set point de temperatura entre 15 y 30 grados Celsius en modo manual
 char sp_char[10]; // Variable de set point en char
@@ -39,7 +40,7 @@ int level = 0; // Variable para detectar el nivel del menú
 int pos_menu = 0; // Variable para detectar la posición dentro de los menúes
 
 char tipo_disp[50]="Temperatura";
-static const char *ID ="1";
+char *ID ="1";
 TickType_t xLastWakeTime;
 
 #endif

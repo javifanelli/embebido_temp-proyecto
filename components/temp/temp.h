@@ -4,7 +4,7 @@
 
 static const dht_sensor_type_t sensor_type = DHT_TYPE_AM2301;
 int16_t humidity=0; // valor de humedad leído
-int16_t temperature=0; // valor de temperatura leído
+
 int cont_temp=0; // variable auxiliar para no mostrar la primera medición de temperatura
 int cont_mqtt = (min_mqtt*60/refresh)-4;
 bool time_sinc_ok = false;

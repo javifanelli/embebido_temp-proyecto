@@ -45,6 +45,8 @@ void read_enc (void *pvParameter)
 				out_temp=false;
 				pant_main();
 			}
+			if((temperature/10)>=30)
+				out_temp=false;
 			if(out_temp)
 				gpio_set_level(CONTROL, 1);
 			if(!out_temp)

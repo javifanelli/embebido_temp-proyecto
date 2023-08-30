@@ -141,6 +141,11 @@ void mqtt_rcv_info(void)
         ESP_LOGE(TAG, "Failed to parse MQTT data");
         return;
     }
+    const cJSON *nuevoId = cJSON_GetObjectItemCaseSensitive(root, "nuevoId");
+    if (cJSON_IsNumber(nuevoId)) {
+        sprintf(ID, "%d", nuevoId->valueint);
+        ESP_LOGI(TAG, "Received new ID in the local MQTT system: %s", ID);
+    }
     const cJSON *id = cJSON_GetObjectItemCaseSensitive(root, "id");
     if (cJSON_IsNumber(id)) {
         char id_str[12];
