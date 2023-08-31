@@ -156,6 +156,7 @@ void mqtt_rcv_info(void)
         if(salida->valueint==0)
             out_temp=false;
         ESP_LOGI(TAG, "Received MQTT salida: %d", salida->valueint);
+        pant_main();
     }
     const cJSON *setpoint = cJSON_GetObjectItemCaseSensitive(root, "setpoint");
     if (cJSON_IsNumber(setpoint) && select) {
