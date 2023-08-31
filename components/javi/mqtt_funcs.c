@@ -194,8 +194,9 @@ void mqtt_rcv_info(void)
             ESP_LOGI(TAG, "Received MQTT mode: Automatico");
         } else {
             ESP_LOGW(TAG, "Received unknown MQTT mode: %s", modo_str);
+        }
+        pant_main();
     }
-}
 
     
     cJSON_Delete(root);
