@@ -41,7 +41,7 @@ int pos_menu = 0; // Variable para detectar la posición dentro de los menúes
 
 char tipo_disp[50]="Temperatura";
 /* char *ID ="1"; */
-char *ID ="0028192332001"; // 2 digitos para el tipo, 4 digitos de codigo, 2 digitos para el año, 2 digitos para la semana, 3 digitos para el numero de dispositivo
+char *ID = "0028192332001"; // 2 digitos para el tipo, 4 digitos de codigo, 2 digitos para el año, 2 digitos para la semana, 3 digitos para el numero de dispositivo
 TickType_t xLastWakeTime;
 
 #endif
