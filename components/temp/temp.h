@@ -32,9 +32,9 @@ void get_temp(void *pvParameter)
             net_con = (ap_info.authmode != WIFI_AUTH_OPEN);
             if(cont_mqtt==60)
                 {
+                cont_mqtt=0;
                 if (net_con==false)
                     esp_wifi_connect();
-                cont_mqtt=0;
                 if(mqtt_state)    
                     mqtt_send_info();
                 }

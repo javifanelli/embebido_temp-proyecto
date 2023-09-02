@@ -198,6 +198,5 @@ void mqtt_rcv_info(void)
         pant_main();
     }
 
-    
     cJSON_Delete(root);
 }
