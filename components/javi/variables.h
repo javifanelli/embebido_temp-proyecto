@@ -31,6 +31,7 @@ int hon=20; // Hora de encendido
 int mon=0; // Minutos de encendido
 int hoff=8; // Hora de encendido
 int moff=0; // Minutos de encendido
+bool init=false; // Variable para detectar si se levantaron los datos del backend
 
 bool btn_enc = false; // Variable para detectar el botón pulsado
 bool inc_enc = false; // Variable para detectar el giro horario del encoder

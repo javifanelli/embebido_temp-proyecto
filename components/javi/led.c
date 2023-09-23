@@ -11,6 +11,7 @@ extern bool dec_enc;
 
 void config_led (void);
 void read_enc (void *pvParameter);
+void blink_1 (void);
 void blink_2(void);
 void blink_3(void);
 
@@ -56,6 +57,23 @@ void read_enc (void *pvParameter)
 		xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
 	}
 	vTaskDelete(NULL);
+}
+
+void blink_1(void){
+	int i=0;
+	bool led=false;
+	while(i<2){
+		if(!led){
+			gpio_set_level(LED_B, 1);
+			led=true;
+		}
+		else{
+			gpio_set_level(LED_B, 0);
+			led=false;
+		}
+		vTaskDelay(pdMS_TO_TICKS(400));
+		i+=1;
+	}
 }
 
 void blink_2(void){
