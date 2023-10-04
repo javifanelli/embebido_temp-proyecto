@@ -54,7 +54,7 @@ void read_enc (void *pvParameter)
 				gpio_set_level(CONTROL, 0);
 		}
 		sprintf(sp_char, "%d", set_point);
-		xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(50));
+		vTaskDelay(pdMS_TO_TICKS(50));
 	}
 	vTaskDelete(NULL);
 }
