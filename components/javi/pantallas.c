@@ -343,13 +343,13 @@ void menu2 (void)
 void menu3(void)
 {
 	ssd1306_clear_screen(&devd, false);
-	ssd1306_display_text(&devd, 0, "Hora encendido  ", 16, true);
+	ssd1306_display_text(&devd, 0, "Hora encendido  ", 16, false);
 	ssd1306_display_text_with_value(&devd, 1, "     ", 5, pant_on_time, strlen(pant_on_time), false);
 	ssd1306_display_text(&devd, 2, "Hora apagado    ", 16, false);
 	ssd1306_display_text_with_value(&devd, 3, "     ", 5, pant_off_time, strlen(pant_off_time), false);
 	ssd1306_display_text(&devd, 4, "Valor encendido ", 16, false);
 	ssd1306_display_text_with_value(&devd, 5, "       ", 7, sp_char, strlen(sp_char), false);
-	ssd1306_display_text(&devd, 6, "Menu anterior   ", 16, false);
+	ssd1306_display_text(&devd, 6, "Menu anterior   ", 16, true);
 	while(level==3){
 		if(btn_enc){
 		btn_enc=false;
